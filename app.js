@@ -67,11 +67,13 @@ app.post("/compose", function(req, res) {
 });
 
 app.get("/posts/:post", function(req, res) {
-  BlogPost.find({title: _.lowerCase(req.params.post)}, function (err, foundPost) {
+  BlogPost.findOne({title: _.lowerCase(req.params.post)}, function (err, foundPost) {
     console.log("Found: " + foundPost);
     res.render("post", {
-      post: foundPost
-    })
+      title: foundPost.title,
+      date: foundPost.date,
+      body: foundPost.body
+    });
   });
 });
 

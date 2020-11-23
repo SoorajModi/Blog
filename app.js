@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/blogDB", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://admin-sooraj:Test123@blogcluster.kuatr.mongodb.net/blogDB?retryWrites=true&w=majority/", {useNewUrlParser: true});
 
 const blogScheme = {
   title: String,
@@ -47,27 +47,21 @@ app.get("/contact", function(req, res) {
   });
 });
 
-app.get("/compose", function(req, res) {
-  res.render("compose", {
-    contactContent: contactContent
-  });
-});
-
 app.post("/compose", function(req, res) {
   const blogPost = new BlogPost({
-    title: _.lowerCase(req.body.composeTitle),
+    title: _.startCase(req.body.composeTitle),
     body: req.body.composeBody,
     date: new Date()
   });
 
-  blogPost.save();
   console.log(blogPost);
+  blogPost.save();
 
   res.redirect("/");
 });
 
 app.get("/posts/:post", function(req, res) {
-  BlogPost.findOne({title: _.lowerCase(req.params.post)}, function (err, foundPost) {
+  BlogPost.findOne({title: _.startCase(req.params.post)}, function (err, foundPost) {
     console.log("Found: " + foundPost);
     res.render("post", {
       title: foundPost.title,
